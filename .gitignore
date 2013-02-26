@@ -20,3 +20,7 @@
 *.pdb
 *.ilk
 *.user
+*.opensdf
+Debug
+Release
+ipch
