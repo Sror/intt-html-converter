@@ -16,20 +16,17 @@ namespace html
 		ToInTT
 	};
 
-	std::string convertFromWide(const std::wstring& input, ConvertType type)
-	{
+	std::string convertFromWide(const std::wstring& input, ConvertType type) {
 		std::ostringstream output;
-		for (std::wstring::const_iterator i = input.begin(); i != input.end(); ++i)
-		{
-			if (i == input.begin() && (*i == 0xFFFE || *i == 0xFEFF))
+		for (std::wstring::const_iterator i = input.begin(); i != input.end(); ++i) {
+			if (i == input.begin() && (*i == 0xFFFE || *i == 0xFEFF)) {
 				continue;
+			}
 
-			if (*i < 0x80)
+			if (*i < 0x80) {
 				output << (char)(*i);
-			else
-			{
-				switch (type)
-				{
+			} else {
+				switch (type) {
 				case ToHTML:
 					output << boost::format("&x%|1$04X|;") % (int)(*i);
 					break;
@@ -43,8 +40,7 @@ namespace html
 		return output.str();
 	}
 
-	void convert(const std::wstring& input, Result& result, const Options& opt)
-	{
+	void convert(const std::wstring& input, Result& result, const Options& opt) {
 		typedef impl::indesign_grammar<std::string::const_iterator> indesign_grammar;
 
 		std::string input2 = convertFromWide(input, ToInTT);
@@ -55,8 +51,7 @@ namespace html
 
 		// split into header (style section) and content
 		std::string::size_type start = input2.find("<ParaStyle:");
-		if (start == std::string::npos)
-		{
+		if (start == std::string::npos) {
 			result.error = "Cannot find start of document body.";
 			return;
 		}
@@ -80,16 +75,13 @@ namespace html
 
 		impl::StyleBuilder sBuilder(style);
 
-		if (parseSucceeded && styleIter == styleEnd)
-		{
+		if (parseSucceeded && styleIter == styleEnd) {
 			// build styles
 			sBuilder.build();
 			result.style = sBuilder.getResult();
 			result.originalStyles = sBuilder.getOriginalStyles();
 			result.colorTable = sBuilder.getColorTable();
-		}
-		else
-		{
+		} else {
 			std::string::const_iterator some = styleIter + 30;
 			std::string context(styleIter, (some > styleEnd) ? styleEnd : some);
 			std::ostringstream tmp;
@@ -97,8 +89,7 @@ namespace html
 			result.error = tmp.str();
 		}
 
-		if (opt.printStyleAST)
-		{
+		if (opt.printStyleAST) {
 			std::cerr << "\nStyles AST\n";
 			impl::AstNode::print_preorder(&style, std::cerr);
 			std::cerr << "\n";
@@ -109,15 +100,12 @@ namespace html
 		std::string::const_iterator docEnd = content.end();
 		parseSucceeded = parse(docIter, docEnd, grammar, doc);
 
-		if (parseSucceeded && docIter == docEnd)
-		{
+		if (parseSucceeded && docIter == docEnd) {
 			// build document
 			impl::HtmlBuilder docBuilder(doc, sBuilder);
 			docBuilder.build();
 			result.document = docBuilder.getResult();
-		}
-		else
-		{
+		} else {
 			std::string::const_iterator some = docIter + 30;
 			std::string context(docIter, (some > docEnd) ? docEnd : some);
 			std::ostringstream tmp;
@@ -126,8 +114,7 @@ namespace html
 			result.document = tmp.str();
 		}
 
-		if (opt.printDocumentAST)
-		{
+		if (opt.printDocumentAST) {
 			std::cerr << "\nDocument AST\n";
 			impl::AstNode::print_preorder(&doc, std::cerr);
 			std::cerr << "\n";

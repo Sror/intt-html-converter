@@ -20,8 +20,7 @@ namespace html { namespace impl {
 
 		virtual void build() = 0;
 
-		virtual void reset()
-		{
+		virtual void reset() {
 			os.str("");
 			os.clear();
 		}
@@ -38,8 +37,7 @@ namespace html { namespace impl {
 		/// </summary>
 		/// <param name="str">String to sanitize</param>
 		/// <returns>Sanitized string</returns>
-		static std::string sanitizeString(const std::string& str)
-		{
+		static std::string sanitizeString(const std::string& str) {
 			std::string res;
 			Sanitizer s;
 			std::transform(str.begin(), str.end(), std::back_inserter(res), s);
@@ -47,32 +45,31 @@ namespace html { namespace impl {
 			return res;
 		}
 
-		static std::string convertColor(const std::string& str)
-		{
+		static std::string convertColor(const std::string& str) {
 			std::string tmp(str);
 			boost::erase_all(tmp, "\\");
 			boost::erase_all(tmp, " ");
 
 			std::vector<std::string> colorInfo;
 			boost::split(colorInfo, tmp, boost::is_any_of(":"));
-			if (colorInfo[0] != "COLOR")
-			{
-				if (colorInfo.size() > 1)
+			if (colorInfo[0] != "COLOR") {
+				if (colorInfo.size() > 1) {
 					return "#000000";
-				else
+				} else {
 					return colorInfo[0];
+				}
 			}
 
-			if (colorInfo.size() < 4)
+			if (colorInfo.size() < 4) {
 				return "#000000";
+			}
 
 			std::vector<std::string> components;
 			boost::split(components, colorInfo[3], boost::is_any_of(","));
 
 			unsigned char r, g, b;
 
-			if (colorInfo[1] == "CMYK")
-			{
+			if (colorInfo[1] == "CMYK") {
 				// convert formula taken from http://easyrgb.com/index.php?X=MATH
 
 				float c = boost::lexical_cast<float>(components[0]);
@@ -89,14 +86,11 @@ namespace html { namespace impl {
 				r = (unsigned char)((1.0f - c2) * 255);
 				g = (unsigned char)((1.0f - m2) * 255);
 				b = (unsigned char)((1.0f - y2) * 255);
-			}
-			else if (colorInfo[1] == "LAB")
-			{
+			} else if (colorInfo[1] == "LAB") {
 				// TODO implement
 				r = g = b = 0;
-			}
-			else // RGB color
-			{
+			} else {
+				// RGB color
 				r = (unsigned char)(boost::lexical_cast<float>(components[0]) * 255);
 				g = (unsigned char)(boost::lexical_cast<float>(components[1]) * 255);
 				b = (unsigned char)(boost::lexical_cast<float>(components[2]) * 255);
@@ -111,8 +105,7 @@ namespace html { namespace impl {
 		struct Sanitizer
 		{
 			template<typename Char>
-			Char operator()(Char c) const
-			{
+			Char operator()(Char c) const {
 				return (std::isalnum(c) || std::isspace(c)) ? c : '_';
 			}
 		};

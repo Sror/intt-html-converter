@@ -40,11 +40,10 @@ namespace html { namespace impl {
 		AstNode(const AstNode& rhs) { *this = rhs; }
 		explicit AstNode(const std::string& rhs) { *this = rhs; }
 
-		AstNode& operator=(const AstNode& rhs)
-		{
-			if (&rhs == this)
+		AstNode& operator=(const AstNode& rhs) {
+			if (&rhs == this) {
 				return *this;
-
+			}
 			data_ = rhs.data_;
 			children_.clear();
 			std::copy(rhs.children_.begin(), rhs.children_.end(), std::back_inserter(children_));
@@ -52,8 +51,7 @@ namespace html { namespace impl {
 			return *this;
 		}
 
-		AstNode& operator=(const std::string& rhs)
-		{
+		AstNode& operator=(const std::string& rhs) {
 			data_.value = rhs;
 			data_.type = Text;
 			children_.clear();
@@ -63,16 +61,14 @@ namespace html { namespace impl {
 		AstData data() const { return data_; }
 		AstData& data() { return data_; }
 
-		static void print_preorder(const AstNode* const root, std::ostream& os, size_t indent = 0)
-		{
-			if (!root)
+		static void print_preorder(const AstNode* const root, std::ostream& os, size_t indent = 0) {
+			if (!root) {
 				return;
-
-			for (size_t i = 0; i < indent; ++i)
+			}
+			for (size_t i = 0; i < indent; ++i) {
 				os << ' ';
-
-			switch (root->data().type)
-			{
+			}
+			switch (root->data().type) {
 			case Unknown:
 				os << "Unknown: ";
 				break;
@@ -101,19 +97,19 @@ namespace html { namespace impl {
 
 			os << root->data().value << "\n";
 
-			for (children_type::const_iterator i = root->children_.begin(); i != root->children_.end(); ++i)
+			for (children_type::const_iterator i = root->children_.begin(); i != root->children_.end(); ++i) {
 				print_preorder(i->get(), os, indent + 4);
+			}
 		}
 
-		void add_child(boost::shared_ptr<AstNode> node)
-		{
+		void add_child(boost::shared_ptr<AstNode> node) {
 			children_.push_back(node);
 		}
 
-		boost::shared_ptr<AstNode> child(size_t i) const
-		{
-			if (i < children_.size())
+		boost::shared_ptr<AstNode> child(size_t i) const {
+			if (i < children_.size()) {
 				return children_[i];
+			}
 			return boost::shared_ptr<AstNode>();
 		}
 

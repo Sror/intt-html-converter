@@ -11,26 +11,25 @@ namespace html { namespace impl {
 		struct result { typedef void type; };
 
 		template <typename Iterator>
-		void operator()(Iterator first, Iterator last, Iterator err_pos, qi::info const& what) const
-		{
+		void operator()(Iterator first, Iterator last, Iterator err_pos, qi::info const& what) const {
 			const int contextLength = 25;
 
 			// get context before error
 			Iterator start;
 			size_t dist = std::distance(first, err_pos);
-			if (dist < contextLength)
+			if (dist < contextLength) {
 				start = first;
-			else
+			} else {
 				start = err_pos - contextLength;
-			
+			}
 			// get context after error
 			Iterator end;
 			dist = std::distance(err_pos, last);
-			if (dist < contextLength)
+			if (dist < contextLength) {
 				end = last;
-			else
+			} else {
 				end = err_pos + contextLength;
-
+			}
 			std::cerr
                 << "Error after: \"" << std::string(start, err_pos) << "\"\n"
                 << "    Expected: " << what << '\n' 

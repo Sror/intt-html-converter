@@ -9,34 +9,31 @@
 
 namespace html { namespace impl {
 
-	void StyleBuilder::reset()
-	{
+	void StyleBuilder::reset() {
 		Builder::reset();
 	}
 
-	void StyleBuilder::build()
-	{
+	void StyleBuilder::build() {
 		size_t i = 0;
-		while (document.child(i))
+		while (document.child(i)) {
 			builder_impl(document.child(i++));
-
+		}
 		inherit_classes();
 
-		for (std::vector<Class>::const_iterator iter = classes.begin(); iter != classes.end(); ++iter)
+		for (std::vector<Class>::const_iterator iter = classes.begin(); iter != classes.end(); ++iter) {
 			print(iter->build());
+		}
 	}
 
-	void StyleBuilder::builder_impl(boost::shared_ptr<AstNode> node)
-	{
-		if (node->data().type != Tag)
+	void StyleBuilder::builder_impl(boost::shared_ptr<AstNode> node) {
+		if (node->data().type != Tag) {
 			return;
-
+		}
 		std::string name = node->child(0)->data().value;
 
 		if (name == "DefineParaStyle" || 
 			name == "DefineCharStyle" || 
-			name == "DefineTableStyle")
-		{
+			name == "DefineTableStyle") {
 			Class cl;
 
 			// put class name
@@ -45,106 +42,97 @@ namespace html { namespace impl {
 			value = value.substr(0, end);
 
 			// no class name, ergo: no style
-			if (value.empty())
+			if (value.empty()) {
 				return;
-
+			}
 			cl.names.push_back(Builder::sanitizeString(value) + "/*" + value + "*/");
 			originalStyles[Builder::sanitizeString(value)] = value;
 
 			// put styles
 			size_t i = 2;
-			while (node->child(i))
-			{
+			while (node->child(i)) {
 				boost::shared_ptr<AstNode> n = node->child(i++);
 
 				std::string type = n->child(0)->data().value;
 				std::string val = n->child(1)->data().value;
 
 				// style inheritation
-				if (type == "BasedOn" || type == "cColor")
-				{
+				if (type == "BasedOn" || type == "cColor") {
 					cl.inherits.push_back(Builder::sanitizeString(val));
 					continue;
 				}
 
 				// styles common for paragraphs, characters tables and table cells
-				if (type == "cSize")
+				if (type == "cSize") {
 					cl.styles.push_back("font-size: " + val + "pt");
-				else if (type == "cFont")
+				} else if (type == "cFont") {
 					cl.styles.push_back("font-family: \'" + val + "\'");
-				else if (type == "cTypeface")
-				{
-					if (val == "Bold")
+				} else if (type == "cTypeface") {
+					if (val == "Bold") {
 						cl.styles.push_back("font-weight: bold");
-					else if (val == "Italic")
+					} else if (val == "Italic") {
 						cl.styles.push_back("font-style: italic");
-					else
-					{
+					} else {
 						cl.styles.push_back("font-style: normal");
 						cl.styles.push_back("font-weight: normal");
 					}
-				}
-				else if (type == "cCase")
-				{
-					if (val == "Small Caps")
+				} else if (type == "cCase") {
+					if (val == "Small Caps") {
 						cl.styles.push_back("font-variant: small-caps");
-					else
+					} else {
 						cl.styles.push_back("font-variant: normal");
-				}
-				
-				if (name == "DefineParaStyle")
-				{
-					// styles for paragraphs only
-					if (type == "pSpaceBefore")
-						cl.styles.push_back("margin-top: " + val + "pt");
-					else if (type == "pSpaceAfter")
-						cl.styles.push_back("margin-bottom: " + val + "pt");
-					else if (type == "pLeftIndent")
-						cl.styles.push_back("margin-left: " + val + "pt");
-					else if (type == "pRightIndent")
-						cl.styles.push_back("margin-right: " + val + "pt");
-					else if (type == "pFirstLineIndent")
-						cl.styles.push_back("text-indent: " + val + "pt");
-					else if (type == "pTextAlignment")
-					{
-						if (val == "Left")
-							cl.styles.push_back("text-align: left");
-						else if (val == "Right")
-							cl.styles.push_back("text-align: right");
-						else if (val == "JustifyLeft" || val == "JustifyCenter" || val == "JustifyRight" || val == "JustifyFull")
-							cl.styles.push_back("text-align: justify");
-						else
-							cl.styles.push_back("text-align: left");
 					}
 				}
-				else if (name == "DefineTableStyle")
-				{
+				
+				if (name == "DefineParaStyle") {
+					// styles for paragraphs only
+					if (type == "pSpaceBefore") {
+						cl.styles.push_back("margin-top: " + val + "pt");
+					} else if (type == "pSpaceAfter") {
+						cl.styles.push_back("margin-bottom: " + val + "pt");
+					} else if (type == "pLeftIndent") {
+						cl.styles.push_back("margin-left: " + val + "pt");
+					} else if (type == "pRightIndent") {
+						cl.styles.push_back("margin-right: " + val + "pt");
+					} else if (type == "pFirstLineIndent") {
+						cl.styles.push_back("text-indent: " + val + "pt");
+					} else if (type == "pTextAlignment") {
+						if (val == "Left") {
+							cl.styles.push_back("text-align: left");
+						} else if (val == "Right") {
+							cl.styles.push_back("text-align: right");
+						} else if (val == "JustifyLeft" || val == "JustifyCenter" || val == "JustifyRight" || val == "JustifyFull") {
+							cl.styles.push_back("text-align: justify");
+						} else {
+							cl.styles.push_back("text-align: left");
+						}
+					}
+				}
+				else if (name == "DefineTableStyle") {
 					// styles for tables only
 				}
-				else if (name == "DefineCellStyle")
-				{
+				else if (name == "DefineCellStyle") {
 					// styles for table cells only
-					if (val == "tCellFillColor")
+					if (val == "tCellFillColor") {
 						cl.styles.push_back("background-color: " + Builder::sanitizeString(value));
-					else if (val == "tcTopStrokeType" ||
+					} else if (val == "tcTopStrokeType" ||
 							 val == "tcBottomStrokeType" ||
 							 val == "tcLeftStrokeType" ||
-							 val == "tcRightStrokeType")
-					{
+							 val == "tcRightStrokeType") {
 						std::string style;
-						if (value == "Solid")
+						if (value == "Solid") {
 							style = "solid";
-						else if (value == "Dashed")
+						} else if (value == "Dashed") {
 							style = "dashed";
-						else if (value == "Dotted")
+						} else if (value == "Dotted") {
 							style = "dotted";
-						else if (value == "ThinThick")
+						} else if (value == "ThinThick") {
 							style = "double";
-						else
+						} else {
 							style = "hidden";
+						}
 
-						switch (name[2])
-						{
+						switch (name[2]) {
 						case 'B': // tcBottomStrokeType
 							cl.styles.push_back("border-bottom-style: " + style);
 							break;
@@ -158,36 +146,32 @@ namespace html { namespace impl {
 							cl.styles.push_back("border-right-style: " + style);
 							break;
 						}
-					}
-					else if (name == "tCellTopStrokeColor")
+					} else if (name == "tCellTopStrokeColor") {
 						cl.styles.push_back("border-top-color: " + Builder::sanitizeString(value));
-					else if (name == "tCellBottomStrokeColor")
+					} else if (name == "tCellBottomStrokeColor") {
 						cl.styles.push_back("border-bottom-color: " + Builder::sanitizeString(value));
-					else if (name == "tCellLeftStrokeColor")
+					} else if (name == "tCellLeftStrokeColor") {
 						cl.styles.push_back("border-left-color: " + Builder::sanitizeString(value));
-					else if (name == "tCellRightStrokeColor")
+					} else if (name == "tCellRightStrokeColor") {
 						cl.styles.push_back("border-right-color: " + Builder::sanitizeString(value));
-					else if (name == "tTextCellVerticalJustification")
-					{
+					} else if (name == "tTextCellVerticalJustification") {
 						std::string align;
-						if (value == "0")
+						if (value == "0") {
 							align = "top";
-						else if (value == "1")
+						} else if (value == "1") {
 							align = "bottom";
-						else
+						} else {
 							align = "center";
+						}
 						cl.styles.push_back("vertical-align: " + align);
 					}
 				}
 			}
 
 			classes.push_back(cl);
-		}
-		else if (name == "ColorTable")
-		{
+		} else if (name == "ColorTable") {
 			size_t i = 1;
-			while (node->child(i))
-			{
+			while (node->child(i)) {
 				Class cl;
 
 				boost::shared_ptr<AstNode> n = node->child(i++);
@@ -207,33 +191,31 @@ namespace html { namespace impl {
 		}
 	}
 
-	void StyleBuilder::inherit_classes()
-	{
+	void StyleBuilder::inherit_classes() {
 		typedef std::vector<Class>::reverse_iterator class_iterator;
 		typedef std::vector<std::string>::const_iterator string_iterator;
 
-		for (class_iterator iter = classes.rbegin(); iter != classes.rend(); ++iter)
-		{
-			for (string_iterator strIter = iter->inherits.begin(); strIter != iter->inherits.end(); ++strIter)
-			{
-				for (class_iterator parentIter = iter + 1; parentIter != classes.rend(); ++parentIter)
-				{
+		for (class_iterator iter = classes.rbegin(); iter != classes.rend(); ++iter) {
+			for (string_iterator strIter = iter->inherits.begin(); strIter != iter->inherits.end(); ++strIter) {
+				for (class_iterator parentIter = iter + 1; parentIter != classes.rend(); ++parentIter) {
 					size_t end = parentIter->names[0].find_first_of('/');
-					if (parentIter->names[0].substr(0, end) == *strIter)
+					if (parentIter->names[0].substr(0, end) == *strIter) {
 						parentIter->names.push_back(iter->names[0]);
+					}
 				}
 			}
 		}
 	}
 
-	std::string StyleBuilder::Class::build() const
-	{
+	std::string StyleBuilder::Class::build() const {
 		std::ostringstream out;
-		for (std::vector<std::string>::const_iterator iter = names.begin(); iter != names.end(); ++iter)
+		for (std::vector<std::string>::const_iterator iter = names.begin(); iter != names.end(); ++iter) {
 			out << (iter == names.begin() ? "" : ", ") << "." << *iter;
+		}
 		out << " {\n";
-		for (std::vector<std::string>::const_iterator iter = styles.begin(); iter != styles.end(); ++iter)
+		for (std::vector<std::string>::const_iterator iter = styles.begin(); iter != styles.end(); ++iter) {
 			out << "    " << *iter << ";\n";
+		}
 		out << "}\n";
 		return out.str();
 	}

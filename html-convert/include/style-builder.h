@@ -21,27 +21,27 @@ namespace html { namespace impl {
 		virtual void reset();
 		virtual void build();
 
-		std::string getColor(const std::string& str) const
-		{
+		std::string getColor(const std::string& str) const {
 			std::map<std::string, std::string>::const_iterator i = colors.find(str);
-			if (i != colors.end())
+			if (i != colors.end()) {
 				return i->second;
+			}
 			return "";
 		}
 
-		std::string getOriginalStyles() const
-		{
+		std::string getOriginalStyles() const {
 			std::ostringstream os;
-			for (std::map<std::string, std::string>::const_iterator i = originalStyles.begin(); i != originalStyles.end(); ++i)
+			for (std::map<std::string, std::string>::const_iterator i = originalStyles.begin(); i != originalStyles.end(); ++i) {
 				os << i->first << ":" << i->second << "\n";
+			}
 			return os.str();
 		}
 
-		std::string getColorTable() const
-		{
+		std::string getColorTable() const {
 			std::ostringstream os;
-			for (std::map<std::string, std::string>::const_iterator i = colors.begin(); i != colors.end(); ++i)
+			for (std::map<std::string, std::string>::const_iterator i = colors.begin(); i != colors.end(); ++i) {
 				os << i->second << ":" << i->first << "\n";
+			}
 			return os.str();
 		}
 
