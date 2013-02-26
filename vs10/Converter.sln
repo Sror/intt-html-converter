@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Converter", "Converter\Converter.vcxproj", "{79DA3277-7FEE-4468-84BC-79280F8FFFB2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3C7AE00F-A176-4E0D-9FED-64BE75D6C6E6} = {3C7AE00F-A176-4E0D-9FED-64BE75D6C6E6}
+		{5855833F-A3F1-4453-95D2-3E0FB81783DA} = {5855833F-A3F1-4453-95D2-3E0FB81783DA}
+		{7FC17AB3-7AD3-4E6F-80E0-ED8148F509CD} = {7FC17AB3-7AD3-4E6F-80E0-ED8148F509CD}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InttConvert", "InttConvert\InttConvert.vcxproj", "{3C7AE00F-A176-4E0D-9FED-64BE75D6C6E6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HtmlConvert", "HtmlConvert\HtmlConvert.vcxproj", "{5855833F-A3F1-4453-95D2-3E0FB81783DA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utf8Support", "Utf8Support\Utf8Support.vcxproj", "{7FC17AB3-7AD3-4E6F-80E0-ED8148F509CD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{79DA3277-7FEE-4468-84BC-79280F8FFFB2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{79DA3277-7FEE-4468-84BC-79280F8FFFB2}.Debug|Win32.Build.0 = Debug|Win32
+		{79DA3277-7FEE-4468-84BC-79280F8FFFB2}.Release|Win32.ActiveCfg = Release|Win32
+		{79DA3277-7FEE-4468-84BC-79280F8FFFB2}.Release|Win32.Build.0 = Release|Win32
+		{3C7AE00F-A176-4E0D-9FED-64BE75D6C6E6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3C7AE00F-A176-4E0D-9FED-64BE75D6C6E6}.Debug|Win32.Build.0 = Debug|Win32
+		{3C7AE00F-A176-4E0D-9FED-64BE75D6C6E6}.Release|Win32.ActiveCfg = Release|Win32
+		{3C7AE00F-A176-4E0D-9FED-64BE75D6C6E6}.Release|Win32.Build.0 = Release|Win32
+		{5855833F-A3F1-4453-95D2-3E0FB81783DA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5855833F-A3F1-4453-95D2-3E0FB81783DA}.Debug|Win32.Build.0 = Debug|Win32
+		{5855833F-A3F1-4453-95D2-3E0FB81783DA}.Release|Win32.ActiveCfg = Release|Win32
+		{5855833F-A3F1-4453-95D2-3E0FB81783DA}.Release|Win32.Build.0 = Release|Win32
+		{7FC17AB3-7AD3-4E6F-80E0-ED8148F509CD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7FC17AB3-7AD3-4E6F-80E0-ED8148F509CD}.Debug|Win32.Build.0 = Debug|Win32
+		{7FC17AB3-7AD3-4E6F-80E0-ED8148F509CD}.Release|Win32.ActiveCfg = Release|Win32
+		{7FC17AB3-7AD3-4E6F-80E0-ED8148F509CD}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
