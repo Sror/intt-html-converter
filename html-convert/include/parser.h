@@ -21,8 +21,7 @@ namespace html { namespace impl {
 		template<typename, typename>
 		struct result { typedef void type; };
 
-		void operator()(AstNode& node, const AstNode& child) const
-		{
+		void operator()(AstNode& node, const AstNode& child) const {
 			node.add_child(boost::shared_ptr<AstNode>(new AstNode(child)));
 		}
 	};
@@ -32,8 +31,7 @@ namespace html { namespace impl {
 		template<typename, typename, typename>
 		struct result { typedef void type; };
 
-		void operator()(AstNode& node, const std::string& text, NodeType type) const
-		{
+		void operator()(AstNode& node, const std::string& text, NodeType type) const {
 			boost::shared_ptr<AstNode> n(new AstNode(text));
 			n->data().type = type;
 			node.add_child(n);
@@ -45,8 +43,7 @@ namespace html { namespace impl {
 		template<typename, typename>
 		struct result { typedef void type; };
 
-		void operator()(AstNode& node, NodeType type) const
-		{
+		void operator()(AstNode& node, NodeType type) const {
 			node.data().type = type;
 		}
 	};

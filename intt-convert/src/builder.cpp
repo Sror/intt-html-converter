@@ -6,13 +6,13 @@
 
 namespace intt { namespace impl {
 
-	void Builder::reset()
-	{
+	void Builder::reset() {
 		os.str("");
 		os.clear();
 
-		while (!st.empty())
+		while (!st.empty()) {
 			st.pop();
+		}
 
 		typefaceBold = typefaceItalic = false;
 		tab = false;
@@ -20,27 +20,24 @@ namespace intt { namespace impl {
 		tags.clear();
 	}
 
-	void Builder::build()
-	{
+	void Builder::build() {
 		size_t i = 0;
-		while (document.child(i))
-		{
-			if (document.child(i)->data().type == Tag)
+		while (document.child(i)) {
+			if (document.child(i)->data().type == Tag) {
 				build_impl(document.child(i));
+			}
 			++i;
 		}
 	}
 
-	void Builder::build_impl(boost::shared_ptr<AstNode> node)
-	{
+	void Builder::build_impl(boost::shared_ptr<AstNode> node) {
 		size_t i = 0;
 		size_t count = 0;
 
 		std::string tmp;
 		NodeType type = node->data().type;
 
-		switch (node->data().type)
-		{
+		switch (node->data().type) {
 		case Text:
 			print(node->data().value);
 			break;
@@ -49,31 +46,23 @@ namespace intt { namespace impl {
 			print("<" + build_entity(node->data().value) + '>');
 			break;
 
-		case Tag:
-			{
-				tmp = node->data().value;
-				if (tmp == "table")
-				{
-					tmp = build_table(node);
-					print(tmp);
-					break;
-				}
-
-				tmp = build_tag(node);
-
+		case Tag: {
+			tmp = node->data().value;
+			if (tmp == "table") {
+				tmp = build_table(node);
+				print(tmp);
 				break;
 			}
+			tmp = build_tag(node);
+			break;
+		}
 
 		case Attributes:
 			break;
 		}
 	}
 
-	std::string Builder::build_tag(boost::shared_ptr<AstNode> node)
-	{
-		typedef std::map<std::string, std::string>::const_iterator tags_iterator;
-		typedef std::map<std::string, std::stack<std::string> >::iterator tags_iterator_2;
-
+	std::string Builder::build_tag(boost::shared_ptr<AstNode> node) {
 		std::vector<std::string> local_tags;
 
 		std::string name = node->data().value;
@@ -81,106 +70,85 @@ namespace intt { namespace impl {
 
 		Attr attr = build_style(node->child(0));
 
-		//for (tags_iterator i = attr.styles.begin(); i != attr.styles.end(); ++i)
-		//{
-		//	if (!tags[i->first].empty())
-		//		print("<" + i->first + ":>");
-		//}
-
-		if (name == "p" || name == "div" || (name.size() == 2 && name[0] == 'h'))
-		{
-			for (tags_iterator_2 i = tags.begin(); i != tags.end(); ++i)
-			{
-				if (!i->second.empty())
+		if (name == "p" || name == "div" || (name.size() == 2 && name[0] == 'h')) {
+			for (auto i = tags.begin(); i != tags.end(); ++i) {
+				if (!i->second.empty()) {
 					print("<" + i->first + ":>");
-				while (!i->second.empty())
+				}
+				while (!i->second.empty()) {
 					i->second.pop();
+				}
 			}
 
 			print("\n<ParaStyle:");
-			if (attr.class_.empty())
+			if (attr.class_.empty()) {
 				print("NormalParagraphStyle>");
-			else
+			} else {
 				print(attr.class_ + '>');
-		}
-		else if (name == "span")
-		{
-			if (!attr.class_.empty())
-			{
+			}
+		} else if (name == "span") {
+			if (!attr.class_.empty()) {
 				print_style("CharStyle", attr.class_);
 				local_tags.push_back("CharStyle");
 			}
-		}
-		else if (name == "strong" || name == "b"
-				|| name == "em" || name == "i")
-		{
+		} else if (name == "strong" || name == "b" || name == "em" || name == "i") {
 			std::string tmp;
-			if (name == "b" || name == "strong")
-			{
+			if (name == "b" || name == "strong") {
 				typefaceBold = true;
 				tmp = "Bold";
-			}
-			else
-			{
+			} else {
 				typefaceItalic = true;
 				tmp = "Italic";
 			}
-			if (typefaceBold && typefaceItalic)
+			if (typefaceBold && typefaceItalic) {
 				tmp = "Bold Italic";
+			}
 
 			print_style("cTypeface", tmp);
 			local_tags.push_back("cTypeface");
 
-			if (!attr.class_.empty())
-			{
+			if (!attr.class_.empty()) {
 				print_style("CharStyle", attr.class_);
 				local_tags.push_back("CharStyle");
 			}
-		}
-		else if (name == "sup" || name == "sub")
-		{
-			if (!attr.class_.empty())
-			{
+		} else if (name == "sup" || name == "sub") {
+			if (!attr.class_.empty()) {
 				print_style("CharStyle", attr.class_);
 				local_tags.push_back("CharStyle");
 			}
 
-			if (name == "sup")
+			if (name == "sup") {
 				print_style("cPosition", "Superscript");
-			else
+			} else {
 				print_style("cPosition", "Subscript");
+			}
 		}
 
-		for (tags_iterator i = attr.styles.begin(); i != attr.styles.end(); ++i)
-		{
+		for (auto i = attr.styles.begin(); i != attr.styles.end(); ++i) {
 			print_style(i->first, i->second);
 			local_tags.push_back(i->first);
 		}
 
 		size_t i = 1;
-		while (node->child(i))
-		{
-			build_impl(node->child(i));
-			++i;
+		while (node->child(i)) {
+			build_impl(node->child(i++));
 		}
 
-		for (std::vector<std::string>::const_iterator i = local_tags.begin(); i != local_tags.end(); ++i)
-		{
-			if (!tags[*i].empty())
-			{
+		for (auto i = local_tags.begin(); i != local_tags.end(); ++i) {
+			if (!tags[*i].empty()) {
 				tags[*i].pop();
 				print("<" + *i + ":>");
 			}
 			
-			if (!tags[*i].empty())
+			if (!tags[*i].empty()) {
 				print("<" + *i + ":" + tags[*i].top() + ">");
+			}
 		}
 
 		return ret;
 	}
 
-	std::string Builder::build_table(boost::shared_ptr<AstNode> node)
-	{
+	std::string Builder::build_table(boost::shared_ptr<AstNode> node) {
 		tab = true;
 		os_tab.str("");
 		os_tab.clear();
@@ -191,33 +159,33 @@ namespace intt { namespace impl {
 		Attr attr = build_style(node->child(0));
 
 		print("<TableStart:#,#,#,#");
-		for (std::map<std::string, std::string>::const_iterator i = attr.styles.begin(); i != attr.styles.end(); ++i)
+		for (auto i = attr.styles.begin(); i != attr.styles.end(); ++i) {
 			print("<" + i->first + ':' + i->second + '>');
+		}
 		print(">");
 
 		boost::shared_ptr<AstNode> header, body, footer;
 		
 		size_t i = 1;
-		while (node->child(i))
-		{
+		while (node->child(i)) {
 			std::string tmp = node->child(i)->data().value;
-			if (tmp == "tbody")
+			if (tmp == "tbody") {
 				body = node->child(i);
-			else if (tmp == "thead")
+			} else if (tmp == "thead") {
 				header = node->child(i);
-			else if (tmp == "tfoot")
+			} else if (tmp == "tfoot") {
 				footer = node->child(i);
+			}
 			++i;
 		}
 
-		if (!body && !header && !footer)
+		if (!body && !header && !footer) {
 			body = node;
+		}
 
 		i = 1;
-		while (header && header->child(i))
-		{
-			if (header->child(i)->data().type == Tag)
-			{
+		while (header && header->child(i)) {
+			if (header->child(i)->data().type == Tag) {
 				++hdr;
 				cols = build_row(header->child(i));
 			}
@@ -225,10 +193,8 @@ namespace intt { namespace impl {
 		}
 
 		i = 1;
-		while (body && body->child(i))
-		{
-			if (body->child(i)->data().type == Tag)
-			{
+		while (body && body->child(i)) {
+			if (body->child(i)->data().type == Tag) {
 				++rows;
 				cols = build_row(body->child(i));
 			}
@@ -236,10 +202,8 @@ namespace intt { namespace impl {
 		}
 
 		i = 1;
-		while (footer && footer->child(i))
-		{
-			if (footer->child(i)->data().type == Tag)
-			{
+		while (footer && footer->child(i)) {
+			if (footer->child(i)->data().type == Tag) {
 				++foot;
 				cols = build_row(footer->child(i));
 			}
@@ -251,8 +215,9 @@ namespace intt { namespace impl {
 		tab = false;
 		std::string ret = os_tab.str();
 		std::string tmp;
-		for (size_t i = 0; i < cols; ++i)
+		for (size_t i = 0; i < cols; ++i) {
 			tmp += "<ColStart:>";
+		}
 		size_t pos = ret.find("<RowStart:");
 		ret.insert(pos, tmp);
 		ret.replace(ret.find_first_of("#"), 1, boost::lexical_cast<std::string>(rows));
@@ -262,22 +227,22 @@ namespace intt { namespace impl {
 		return ret;
 	}
 
-	size_t Builder::build_row(boost::shared_ptr<AstNode> node)
-	{
+	size_t Builder::build_row(boost::shared_ptr<AstNode> node) {
 		Attr attr = build_style(node->child(0));
 
 		size_t cell_count = 0;
 
 		print("<RowStart:");
-		for (std::map<std::string, std::string>::const_iterator i = attr.styles.begin(); i != attr.styles.end(); ++i)
+		for (auto i = attr.styles.begin(); i != attr.styles.end(); ++i) {
 			print("<" + i->first + ':' + i->second + '>');
+		}
 		print(">");
 
 		size_t i = 1;
-		while (node->child(i))
-		{
-			if (node->child(i)->data().type == Tag)
+		while (node->child(i)) {
+			if (node->child(i)->data().type == Tag) {
 				cell_count += build_cell(node->child(i));
+			}
 			++i;
 		}
 
@@ -286,27 +251,28 @@ namespace intt { namespace impl {
 		return cell_count;
 	}
 
-	size_t Builder::build_cell(boost::shared_ptr<AstNode> node)
-	{
+	size_t Builder::build_cell(boost::shared_ptr<AstNode> node) {
 		Attr attr = build_style(node->child(0));
 
 		size_t cell_size = 1;
 
 		size_t i = 0;
-		while (node->child(0)->child(i))
-		{
+		while (node->child(0)->child(i)) {
 			boost::shared_ptr<AstNode> tmp = node->child(0)->child(i);
-			if (tmp->data().value == "colspan")
+			if (tmp->data().value == "colspan") {
 				cell_size = boost::lexical_cast<size_t>(tmp->child(0)->data().value);
+			}
 			++i;
 		}
 
-		if (!attr.class_.empty())
+		if (!attr.class_.empty()) {
 			print("<CellStyle:" + attr.class_ + "><StylePriority:0>");
+		}
 		print("<CellStart:1," + boost::lexical_cast<std::string>(cell_size));
 		
-		for (std::map<std::string, std::string>::const_iterator i = attr.styles.begin(); i != attr.styles.end(); ++i)
+		for (auto i = attr.styles.begin(); i != attr.styles.end(); ++i) {
 			print("<" + i->first + ':' + i->second + '>');
+		}
 		print(">");
 
 		if (node->child(1) && (
@@ -316,35 +282,34 @@ namespace intt { namespace impl {
 				node->child(1)->data().value == "p" 
 				|| node->child(1)->data().value == "div" 
 				|| node->child(1)->data().value[0] == 'h'))
-		))
-		{
+		)) {
 			print("\n<ParaStyle:NormalParagraphStyle>");
 		}
 
 		i = 1;
-		while (node->child(i))
+		while (node->child(i)) {
 			build_impl(node->child(i++));
+		}
 
 		print("<CellEnd:>");
 
-		for (i = 1; i < cell_size; ++i)
+		for (i = 1; i < cell_size; ++i) {
 			print("<CellStart:1,1><CellEnd:>");
+		}
 
 		return cell_size;
 	}
 
-	Builder::Attr Builder::build_style(boost::shared_ptr<AstNode> node)
-	{
+	Builder::Attr Builder::build_style(boost::shared_ptr<AstNode> node) {
 		Attr attr;
 		
-		if (node->data().type != Attributes)
+		if (node->data().type != Attributes) {
 			return attr;
+		}
 
 		size_t i = 0;
-		while (node->child(i))
-		{
-			if (node->child(i)->data().type == AttrName && node->child(i)->data().value == "class")
-			{
+		while (node->child(i)) {
+			if (node->child(i)->data().type == AttrName && node->child(i)->data().value == "class") {
 				attr.class_ = node->child(i)->child(0)->data().value;
 				break;
 			}
@@ -352,78 +317,62 @@ namespace intt { namespace impl {
 		}
 
 		i = 0;
-		while (node->child(i))
-		{
-			if (node->child(i)->data().value == "style")
-			{
+		while (node->child(i)) {
+			if (node->child(i)->data().value == "style") {
 				boost::shared_ptr<AstNode> n = node->child(i);
 				size_t j = 0;
-				while (n->child(j))
-				{
+				while (n->child(j)) {
 					std::string key = n->child(j)->data().value;
 					std::string value = n->child(j)->child(0)->data().value;
 
-					if (key == "font-family")
-					{
+					if (key == "font-family") {
 						std::string fontname = get_font(value);
-						if (!fontname.empty())
-						{
+						if (!fontname.empty()) {
 							attr.styles["cFont"] = fontname;
-							//tags["cFont"] = true;
 						}
-					}
-					else if (key == "font-size")
-					{
+					} else if (key == "font-size") {
 						size_t end = value.find_last_of("0123456789.") + 1;
 						double size = boost::lexical_cast<double>(value.substr(0, end));
 						std::string unit;
-						if (end < value.size())
+						if (end < value.size()) {
 							unit = value.substr(end);
+						}
 						boost::trim(unit);
 						boost::to_lower(unit);
-						if (unit.empty())
-						{
-							if (unit == "pc")
+						if (unit.empty()) {
+							if (unit == "pc") {
 								size *= 12;
-							else if (unit == "in")
+							} else if (unit == "in") {
 								size *= 72;
-							else if (unit == "mm")
+							} else if (unit == "mm") {
 								size *= 2.8346456692897;
-							else if (unit == "px")
+							} else if (unit == "px") {
 								size *= (1.0 / 96.0) / 72.0; // assuming resolution 96 DPI
+							}
 						}
 
 						attr.styles["cSize"] = boost::lexical_cast<std::string>(size);
-						//tags["cSize"] = true;
-					}
-					else if (key == "color")
-					{
+					} else if (key == "color") {
 						attr.styles["cColor"] = build_color(value);
-						//tags["cColor"] = true;
-					}
-					else if (key == "font-style")
-					{
-						if (value == "italic")
+					} else if (key == "font-style") {
+						if (value == "italic") {
 							attr.styles["cTypeface"] = "Italic";
-					}
-					else if (key == "text-decoration")
-					{
+						}
+					} else if (key == "text-decoration") {
 						std::vector<std::string> tmp;
 						boost::split(tmp, value, boost::is_any_of(", "));
-						for (std::vector<std::string>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
-						{
-							if (*i == "line-through")
+						for (auto i = tmp.begin(); i != tmp.end(); ++i) {
+							if (*i == "line-through") {
 								attr.styles["cStrikethru"] = "1";
-							else if (*i == "underline")
+							} else if (*i == "underline") {
 								attr.styles["cUnderline"] = "1";
+							}
+						}
+					} else if (key == "font-weight") {
+						if (value == "bold") {
+							attr.styles["cTypeface"] = "Bold";
 						}
 					}
-					else if (key == "font-weight")
-					{
-						if (value == "bold")
-							attr.styles["cTypeface"] = "Bold";
-					}
-
 					++j;
 				}
 				break;
@@ -434,45 +383,42 @@ namespace intt { namespace impl {
 		return attr;
 	}
 
-	void Builder::print_style(const std::string& s, const std::string& name)
-	{
-		if (!tags[s].empty())
+	void Builder::print_style(const std::string& s, const std::string& name) {
+		if (!tags[s].empty()) {
 			print("<" + s + ":>");
+		}
 		print("<" + s + ":" + name + ">");
 		tags[s].push(name);
 	}
 
-	void Builder::print(const std::string& s)
-	{
-		if (!tab)
+	void Builder::print(const std::string& s) {
+		if (!tab) {
 			os << s;
-		else
+		} else {
 			os_tab << s;
+		}
 	}
 
-	std::string Builder::build_color(const std::string& str)
-	{
+	std::string Builder::build_color(const std::string& str) {
 		std::string tmp(str);
-		std::map<std::string, std::string>::const_iterator iter = colors.find(str);
-		if (iter != colors.end())
-		{
+		auto iter = colors.find(str);
+		if (iter != colors.end()) {
 			tmp = iter->second;
 			iter = classes.find(tmp);
-			if (iter != classes.end())
+			if (iter != classes.end()) {
 				tmp = iter->second;
-		}
-		else
-		{
+			}
+		} else {
 			std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::tolower);
-			std::map<std::string, std::string>::const_iterator iter = colorNames.find(tmp);
-			if (iter != colorNames.end())
+			auto iter = colorNames.find(tmp);
+			if (iter != colorNames.end()) {
 				tmp = iter->second;
-			else if (tmp[0] != '#')
+			} else if (tmp[0] != '#') {
 				tmp = "#000000"; // unknown color -- default to black
+			}
 
 			tmp = tmp.substr(1);
-			if (tmp.size() == 3)
-			{
+			if (tmp.size() == 3) {
 				tmp.resize(6);
 				tmp[4] = tmp[2];
 				tmp[2] = tmp[1];
@@ -492,25 +438,24 @@ namespace intt { namespace impl {
 		return tmp;
 	}
 
-	std::string Builder::build_entity(std::string str)
-	{
-		if (str[0] == '#')
+	std::string Builder::build_entity(std::string str) {
+		if (str[0] == '#') {
 			str[0] = '0';
-		else
-		{
+		} else {
 			std::map<std::string, std::string>::const_iterator iter = entities.find(str);
-			if (iter != entities.end())
+			if (iter != entities.end()) {
 				str = iter->second;
-			else
+			} else {
 				str = "0x003F"; // unknown entity -- default to question mark
+			}
 		}
 		return str;
 	}
 
-#define DEF_COLOR(name, value)  (const_cast<std::map<std::string, std::string>*>(&colorNames))->insert(std::make_pair(#name, value));
-#define DEF_ENTITY(name, value) (const_cast<std::map<std::string, std::string>*>(&entities))->insert(std::make_pair(name, value));
-	void Builder::init()
-	{
+#define DEF_COLOR(name, value) colorNames.insert(std::make_pair(#name, value));
+#define DEF_ENTITY(name, value) entities.insert(std::make_pair(name, value));
+
+	void Builder::init() {
 		DEF_COLOR(aliceblue,            "#F0F8FF")
 		DEF_COLOR(antiquewhite,         "#FAEBD7")
 		DEF_COLOR(aqua,                 "#00FFFF")
@@ -925,8 +870,8 @@ namespace intt { namespace impl {
 		0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 127
 	};
 
-	const std::map<std::string, std::string> Builder::colorNames;
-	const std::map<std::string, std::string> Builder::entities;
+	std::map<std::string, std::string> Builder::colorNames;
+	std::map<std::string, std::string> Builder::entities;
 	std::map<std::string, std::stack<std::string> > Builder::tags;
 
 }}

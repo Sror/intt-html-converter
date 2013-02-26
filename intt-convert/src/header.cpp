@@ -6,8 +6,7 @@
 
 namespace intt { namespace impl {
 
-	Header getHeader(const std::string& str)
-	{
+	Header getHeader(const std::string& str) {
 		Header hdr;
 		hdr.position = 0;
 		hdr.corrupted = false;
@@ -15,32 +14,27 @@ namespace intt { namespace impl {
 		std::string::size_type pos = 0, end = 0;
 
 		pos = str.find("<!--RAW-HEADER\n");
-		if (pos != std::string::npos) // found raw header
-		{
+		if (pos != std::string::npos) {
 			pos = str.find_first_of("<", pos + 1);
 			end = str.find("-->", pos);
-			if (end != std::string::npos)
+			if (end != std::string::npos) {
 				hdr.rawDef = str.substr(pos, end - pos);
-			else
+			} else {
 				hdr.corrupted = true;
-		}
-		else
-		{
+			}
+		} else {
 			hdr.corrupted = true;
 			return hdr;
 		}
 
 		pos = str.find("<!--CLASS-MAP\n", end);
-		if (pos != std::string::npos)
-		{
+		if (pos != std::string::npos) {
 			end = str.find("-->", pos);
-			if (end != std::string::npos)
-			{
+			if (end != std::string::npos) {
 				std::istringstream is(str.substr(pos, end - pos));
 				std::string line;
 				getline(is, line);
-				while (getline(is, line))
-				{
+				while (getline(is, line)) {
 					std::string first, second;
 					pos = line.find_first_of(':');
 					first = line.substr(0, pos);
@@ -48,40 +42,38 @@ namespace intt { namespace impl {
 
 					hdr.classDef.insert(std::make_pair(first, second));
 				}
-			}
-			else
+			} else {
 				hdr.corrupted = true;
-		}
-		else
+			}
+		} else {
 			return hdr;
+		}
 
 		pos = str.find("<!--COLOR-MAP\n", end);
-		if (pos != std::string::npos)
-		{
+		if (pos != std::string::npos) {
 			end = str.find("-->", pos);
-			if (end != std::string::npos)
-			{
+			if (end != std::string::npos) {
 				std::istringstream is(str.substr(pos, end - pos));
 				std::string line;
 				getline(is, line);
-				while (getline(is, line))
-				{
+				while (getline(is, line)) {
 					std::string first, second;
 					pos = line.find_first_of(':');
-					if (pos == std::string::npos)
+					if (pos == std::string::npos){
 						continue;
+					}
 
 					first = line.substr(0, pos);
 					second = line.substr(pos + 1);
 
 					hdr.colorDef.insert(std::make_pair(first, second));
 				}
-			}
-			else
+			} else{
 				hdr.corrupted = true;
-		}
-		else
+			}
+		} else {
 			return hdr;
+		}
 
  		hdr.position = str.find_first_of('<', end);
 

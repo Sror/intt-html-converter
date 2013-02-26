@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Builder">
+      <UniqueIdentifier>{eb2631b7-c8ec-4b70-b625-ea8b7f20d863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Builder">
+      <UniqueIdentifier>{3b715ff2-6997-4c3d-84b2-7cd51c3f4ac8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\intt-convert\include\ast.h">
@@ -22,9 +28,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\intt-convert\include\attr-parser_impl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\intt-convert\include\builder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\intt-convert\include\error-handler.h">
@@ -45,15 +48,15 @@
     <ClInclude Include="..\..\intt-convert\include\parser_impl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\intt-convert\include\builder.h">
+      <Filter>Header Files\Builder</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\intt-convert\include\table-builder.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Builder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\intt-convert\src\attr-parser_impl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\intt-convert\src\builder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\intt-convert\src\fonts.cpp">
@@ -68,8 +71,11 @@
     <ClCompile Include="..\..\intt-convert\src\parser_impl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\intt-convert\src\builder.cpp">
+      <Filter>Source Files\Builder</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\intt-convert\src\table-builder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Builder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

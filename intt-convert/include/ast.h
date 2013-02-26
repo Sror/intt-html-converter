@@ -64,11 +64,13 @@ namespace intt { namespace impl {
 		AstData& data() { return data_; }
 
 		static void print_preorder(const AstNode* const root, std::ostream& os, size_t indent = 0) {
-			if (!root)
+			if (!root) {
 				return;
+			}
 
-			for (size_t i = 0; i < indent; ++i)
+			for (size_t i = 0; i < indent; ++i) {
 				os << ' ';
+			}
 
 			switch (root->data().type) {
 			case Unknown:     os << "Unknown: ";        break;

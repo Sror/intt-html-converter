@@ -16,20 +16,17 @@ namespace intt
 		ToInTT
 	};
 
-	std::string convertFromWide(const std::wstring& input, ConvertType type)
-	{
+	std::string convertFromWide(const std::wstring& input, ConvertType type) {
 		std::ostringstream output;
-		for (std::wstring::const_iterator i = input.begin(); i != input.end(); ++i)
-		{
-			if (i == input.begin() && (*i == 0xFFFE || *i == 0xFEFF))
+		for (auto i = input.begin(); i != input.end(); ++i) {
+			if (i == input.begin() && (*i == 0xFFFE || *i == 0xFEFF)) {
 				continue;
+			}
 
-			if (*i < 0x80)
+			if (*i < 0x80) {
 				output << (char)(*i);
-			else
-			{
-				switch (type)
-				{
+			} else {
+				switch (type) {
 				case ToHTML:
 					output << boost::format("&x%|1$04X|;") % (int)(*i);
 					break;
@@ -43,8 +40,7 @@ namespace intt
 		return output.str();
 	}
 
-	void convert(const std::wstring& input, Result& result, const Options& opt)
-	{
+	void convert(const std::wstring& input, Result& result, const Options& opt) {
 		typedef impl::html_grammar<std::string::const_iterator> html_grammar;
 
 		std::cerr << "Converting Unicode characters\n";
@@ -52,8 +48,7 @@ namespace intt
 
 		std::cerr << "Parsing headers\n";
 		impl::Header hdr = impl::getHeader(input2);
-		if (hdr.corrupted)
-		{
+		if (hdr.corrupted) {
 			//result.error = "Error while parsing headers.";
 			//return;
 		}
@@ -70,23 +65,21 @@ namespace intt
 		std::string::const_iterator docEnd = input2.end();
 		parseSucceeded = parse(docIter, docEnd, grammar, doc);
 
-		if (parseSucceeded && docIter == docEnd)
-		{
+		if (parseSucceeded && docIter == docEnd) {
 			// build document
 			std::cerr << "Building document\n";
 			impl::Builder builder(doc, hdr.classDef, hdr.colorDef);
 			builder.build();
 			result.document = hdr.rawDef;
-			if (result.document.empty())
+			if (result.document.empty()) {
 				result.document = "<ASCII-WIN>\n";
+			}
 
 			result.document += builder.getResult();
 			std::ostringstream os;
 			impl::AstNode::print_preorder(&doc, os);
 			result.ast = os.str();
-		}
-		else
-		{
+		} else {
 			std::string::const_iterator some = docIter + 30;
 			std::string context(docIter, (some > docEnd) ? docEnd : some);
 			std::ostringstream tmp;

@@ -6,9 +6,7 @@
 namespace intt { namespace impl {
 
 	template<typename Iterator>
-	html_grammar<Iterator>::html_grammar() 
-		: html_grammar::base_type(document)
-	{
+	html_grammar<Iterator>::html_grammar() : html_grammar::base_type(document) {
 		using qi::lit;
 		using qi::eps;
         using qi::lexeme;
@@ -50,45 +48,16 @@ namespace intt { namespace impl {
 				| ("<!--" >> *(char_ - "-->") > "-->");
 
 		document.name("document");
-		//BOOST_SPIRIT_DEBUG_NODE(document);
-
 		tag_content.name("tag-content");
-		//BOOST_SPIRIT_DEBUG_NODE(tag_content);
-
 		tag.name("tag");
-		//BOOST_SPIRIT_DEBUG_NODE(tag);
-
 		tag_end.name("tag-end");
-		//BOOST_SPIRIT_DEBUG_NODE(tag_end);
-
 		entity.name("entity");
-		//BOOST_SPIRIT_DEBUG_NODE(entity);
-
 		text.name("text");
-		//BOOST_SPIRIT_DEBUG_NODE(text);
-
 		entity_value.name("entity-value");
-		//BOOST_SPIRIT_DEBUG_NODE(entity_value);
-
 		tag_name.name("tag-name");
-		//BOOST_SPIRIT_DEBUG_NODE(tag_name);
-
 		sp.name("space");
-		//BOOST_SPIRIT_DEBUG_NODE(sp);
-
 		comment.name("comment");
-		//BOOST_SPIRIT_DEBUG_NODE(comment);
-
 		qi::on_error<qi::fail>(document, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//qi::on_error<qi::fail>(tag_content, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//qi::on_error<qi::fail>(tag, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//qi::on_error<qi::fail>(tag_end, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//qi::on_error<qi::fail>(entity, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//qi::on_error<qi::fail>(text, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//qi::on_error<qi::fail>(entity_value, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//qi::on_error<qi::fail>(tag_name, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//qi::on_error<qi::fail>(sp, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//qi::on_error<qi::fail>(comment, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
 	}
 
 }}
