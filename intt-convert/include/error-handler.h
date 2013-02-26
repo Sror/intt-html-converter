@@ -18,18 +18,20 @@ namespace intt { namespace impl {
 			// get context before error
 			Iterator start;
 			size_t dist = std::distance(first, err_pos);
-			if (dist < contextLength)
+			if (dist < contextLength) {
 				start = first;
-			else
+			} else {
 				start = err_pos - contextLength;
+			}
 			
 			// get context after error
 			Iterator end;
 			dist = std::distance(err_pos, last);
-			if (dist < contextLength)
+			if (dist < contextLength) {
 				end = last;
-			else
+			} else {
 				end = err_pos + contextLength;
+			}
 
 			std::cerr
                 << "Error at offset " << (err_pos - first) << " after: \"" << std::string(start, err_pos) << "\"\n"

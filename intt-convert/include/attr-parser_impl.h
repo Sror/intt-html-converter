@@ -6,9 +6,7 @@
 namespace intt { namespace impl {
 
 	template<typename Iterator>
-	attr_grammar<Iterator>::attr_grammar() 
-		: attr_grammar::base_type(result)
-	{
+	attr_grammar<Iterator>::attr_grammar() : attr_grammar::base_type(result) {
 		using qi::lit;
 		using qi::eps;
         using qi::lexeme;
@@ -57,48 +55,18 @@ namespace intt { namespace impl {
 		sp = +char_(" \t\n");
 		
 		result.name("result");
-		qi::on_error<qi::fail>(result, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//BOOST_SPIRIT_DEBUG_NODE(result);
-
 		attr.name("attribute");
-		//qi::on_error<qi::fail>(attr, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//BOOST_SPIRIT_DEBUG_NODE(attr);
-
 		attr_val.name("attribute-name");
-		//qi::on_error<qi::fail>(attr_val, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//BOOST_SPIRIT_DEBUG_NODE(attr_val);
-
 		style_elem.name("double-quoted-style-element");
-		//qi::on_error<qi::fail>(style_elem, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//BOOST_SPIRIT_DEBUG_NODE(style_elem);
-
 		style_elem_2.name("single-quoted-style-element");
-		//qi::on_error<qi::fail>(style_elem_2, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//BOOST_SPIRIT_DEBUG_NODE(style_elem_2);
-
 		identifier.name("identifier");
-		//qi::on_error<qi::fail>(identifier, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//BOOST_SPIRIT_DEBUG_NODE(identifier);
-
 		style_content.name("double-quoted-style-content");
-		//qi::on_error<qi::fail>(style_content, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//BOOST_SPIRIT_DEBUG_NODE(style_content);
-
 		style_content_2.name("single-quoted-style-content");
-		//qi::on_error<qi::fail>(style_content_2, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//BOOST_SPIRIT_DEBUG_NODE(style_content_2);
-
 		content.name("content");
-		//qi::on_error<qi::fail>(content, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//BOOST_SPIRIT_DEBUG_NODE(content);
-
 		content_2.name("content-2");
-		//qi::on_error<qi::fail>(content, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//BOOST_SPIRIT_DEBUG_NODE(content_2);
-
 		sp.name("space");
-		//qi::on_error<qi::fail>(sp, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
-		//BOOST_SPIRIT_DEBUG_NODE(space);
+
+		qi::on_error<qi::fail>(result, err_handler(qi::_1, qi::_2, qi::_3, qi::_4));
 	}
 
 }}

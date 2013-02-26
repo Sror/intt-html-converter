@@ -18,7 +18,7 @@ namespace html
 
 	std::string convertFromWide(const std::wstring& input, ConvertType type) {
 		std::ostringstream output;
-		for (std::wstring::const_iterator i = input.begin(); i != input.end(); ++i) {
+		for (auto i = input.begin(); i != input.end(); ++i) {
 			if (i == input.begin() && (*i == 0xFFFE || *i == 0xFEFF)) {
 				continue;
 			}

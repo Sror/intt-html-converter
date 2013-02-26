@@ -20,7 +20,7 @@ namespace html { namespace impl {
 		}
 		inherit_classes();
 
-		for (std::vector<Class>::const_iterator iter = classes.begin(); iter != classes.end(); ++iter) {
+		for (auto iter = classes.begin(); iter != classes.end(); ++iter) {
 			print(iter->build());
 		}
 	}
@@ -192,12 +192,10 @@ namespace html { namespace impl {
 	}
 
 	void StyleBuilder::inherit_classes() {
-		typedef std::vector<Class>::reverse_iterator class_iterator;
-		typedef std::vector<std::string>::const_iterator string_iterator;
 
-		for (class_iterator iter = classes.rbegin(); iter != classes.rend(); ++iter) {
-			for (string_iterator strIter = iter->inherits.begin(); strIter != iter->inherits.end(); ++strIter) {
-				for (class_iterator parentIter = iter + 1; parentIter != classes.rend(); ++parentIter) {
+		for (auto iter = classes.rbegin(); iter != classes.rend(); ++iter) {
+			for (auto strIter = iter->inherits.begin(); strIter != iter->inherits.end(); ++strIter) {
+				for (auto parentIter = iter + 1; parentIter != classes.rend(); ++parentIter) {
 					size_t end = parentIter->names[0].find_first_of('/');
 					if (parentIter->names[0].substr(0, end) == *strIter) {
 						parentIter->names.push_back(iter->names[0]);
@@ -209,11 +207,11 @@ namespace html { namespace impl {
 
 	std::string StyleBuilder::Class::build() const {
 		std::ostringstream out;
-		for (std::vector<std::string>::const_iterator iter = names.begin(); iter != names.end(); ++iter) {
+		for (auto iter = names.begin(); iter != names.end(); ++iter) {
 			out << (iter == names.begin() ? "" : ", ") << "." << *iter;
 		}
 		out << " {\n";
-		for (std::vector<std::string>::const_iterator iter = styles.begin(); iter != styles.end(); ++iter) {
+		for (auto iter = styles.begin(); iter != styles.end(); ++iter) {
 			out << "    " << *iter << ";\n";
 		}
 		out << "}\n";

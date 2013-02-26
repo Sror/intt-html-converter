@@ -21,8 +21,7 @@ namespace intt { namespace impl {
 		Builder(const AstNode& document, 
 			const std::map<std::string, std::string>& classes, 
 			const std::map<std::string, std::string>& colors) 
-			: document(document), classes(classes), colors(colors)
-		{
+			: document(document), classes(classes), colors(colors) {
 			init();
 			reset();
 		}
@@ -63,8 +62,8 @@ namespace intt { namespace impl {
 
 		const std::map<std::string, std::string>& classes;
 		const std::map<std::string, std::string>& colors;
-		static const std::map<std::string, std::string> colorNames;
-		static const std::map<std::string, std::string> entities;
+		static std::map<std::string, std::string> colorNames;
+		static std::map<std::string, std::string> entities;
 		static const char keyMap[128];
 		static void init();
 

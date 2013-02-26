@@ -10,21 +10,25 @@ namespace html { namespace impl {
 
 		emptyParagraph = false;
 
-		while (!charStyleStack.empty())
+		while (!charStyleStack.empty()) {
 			charStyleStack.pop();
-		while (!parStyleStack.empty())
+		}
+		while (!parStyleStack.empty()) {
 			parStyleStack.pop();
-
-		while (!tableStack.empty())
+		}
+		while (!tableStack.empty()) {
 			tableStack.pop();
-		while (!tabCellStack.empty())
+		}
+		while (!tabCellStack.empty()) {
 			tabCellStack.pop();
+		}
 	}
 
 	void HtmlBuilder::build() {
 		size_t i = 0;
-		while (document.child(i))
+		while (document.child(i)) {
 			build_impl(document.child(i++));
+		}
 		end_char_style();
 		end_par_style();
 	}
@@ -43,12 +47,14 @@ namespace html { namespace impl {
 				flush_par_style();
 				std::string s = node->data().value;
 				bool empty = true;
-				for (std::string::const_iterator i = s.begin(); i != s.end(); ++i)
-					if (std::isgraph(*i))
+				for (auto i = s.begin(); i != s.end(); ++i) {
+					if (std::isgraph(*i)) {
 						empty = false;
-				if (empty)
+					}
+				}
+				if (empty) {
 					s = "&nbsp;";
-
+				}
 				print(s);
 			}
 			break;
@@ -321,7 +327,7 @@ namespace html { namespace impl {
 
 		size_t i = 1;
 		while (node->child(i)) {
-			boost::shared_ptr<AstNode> tag = node->child(i);
+			auto tag = node->child(i);
 			if (tag->data().type != Tag) {
 				continue;
 			}
@@ -479,7 +485,7 @@ namespace html { namespace impl {
 			tab.rows[hdrPtr--].header = true;
 		}
 
-		for (std::vector<TabRow>::iterator iter = tab.rows.begin(); iter != tab.rows.end(); ++iter) {
+		for (auto iter = tab.rows.begin(); iter != tab.rows.end(); ++iter) {
 			iter->cells.resize(colCount);
 		}
 
