@@ -1,11 +1,11 @@
-#include "style-builder.h"
-
 #include <cmath>
 #include <string>
 #include <vector>
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>
+
+#include "style-builder.h"
 
 namespace html { namespace impl {
 
